@@ -6,167 +6,302 @@
 <title>How Far Does $1 Go?</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --ink: #1a1208;
-  --paper: #f5f0e8;
-  --cream: #ede7d4;
-  --aged: #d4c9a8;
-  --rust: #c2440e;
-  --gold: #b8860b;
-  --forest: #2d5a27;
-  --navy: #1a2744;
-  --sienna: #8b4513;
-  --muted: #6b5d47;
-}
-body {
-  background-color: var(--paper);
-  color: var(--ink);
-  font-family: 'JetBrains Mono', monospace;
-  min-height: 100vh;
-  padding: 0;
-  position: relative;
-  overflow-x: hidden;
-}
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-}
-.wrapper {
-  position: relative;
-  z-index: 1;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 48px 32px 80px;
-}
-header {
-  text-align: center;
-  margin-bottom: 56px;
-  border-bottom: 3px double var(--aged);
-  padding-bottom: 40px;
-}
-.eyebrow {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 16px;
-}
-h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(36px, 6vw, 72px);
-  font-weight: 900;
-  line-height: 1.05;
-  color: var(--ink);
-  margin-bottom: 12px;
-}
-h1 .accent {
-  color: var(--rust);
-  font-style: italic;
-}
-.subtitle {
-  font-size: 12px;
-  color: var(--muted);
-  letter-spacing: 0.08em;
-  margin-top: 16px;
-}
-.book-selector {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 48px;
-}
-.book-btn {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  padding: 8px 16px;
-  border: 1.5px solid var(--aged);
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.15s;
-  letter-spacing: 0.04em;
-}
-.book-btn:hover { border-color: var(--ink); color: var(--ink); }
-.book-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
-.book-info {
-  text-align: center;
-  margin-bottom: 40px;
-  padding: 20px;
-  border: 1px solid var(--aged);
-  background: var(--cream);
-}
-.book-title { font-family: 'Playfair Display', serif; font-size: 22px; font-style: italic; color: var(--ink); }
-.book-meta { font-size: 11px; color: var(--muted); margin-top: 6px; letter-spacing: 0.06em; }
-.table-section { margin-bottom: 64px; }
-.section-label {
-  font-size: 9px;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.section-label::after { content: ''; flex: 1; height: 1px; background: var(--aged); }
-.model-row {
-  display: grid;
-  grid-template-columns: 200px 1fr 120px;
-  align-items: center;
-  gap: 16px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--cream);
-  transition: background 0.1s;
-}
-.model-row:hover { background: var(--cream); margin: 0 -16px; padding: 14px 16px; }
-.model-row:first-child { border-top: 1px solid var(--aged); }
-.model-name { font-size: 12px; font-weight: 500; color: var(--ink); display: flex; flex-direction: column; gap: 3px; }
-.model-family { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-.bar-container { display: flex; align-items: center; gap: 12px; }
-.bar-track { flex: 1; height: 20px; background: var(--cream); border: 1px solid var(--aged); position: relative; overflow: hidden; }
-.bar-fill { height: 100%; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
-.bar-fill::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(-45deg, transparent, transparent 3px, rgba(255,255,255,0.15) 3px, rgba(255,255,255,0.15) 6px);
-}
-.bar-label { font-size: 10px; color: var(--muted); white-space: nowrap; min-width: 120px; text-align: right; }
-.bar-label strong { font-size: 15px; color: var(--ink); font-weight: 500; }
-.tier-badge { display: inline-block; font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 6px; margin-top: 3px; width: fit-content; }
-.badge-free     { background: #2d7a4f22; color: #2d7a4f; border: 1px solid #2d7a4f44; }
-.badge-budget   { background: #3a6ea822; color: #3a6ea8; border: 1px solid #3a6ea844; }
-.badge-mid      { background: #b8860b22; color: #b8860b; border: 1px solid #b8860b44; }
-.badge-premium  { background: #8b451322; color: #8b4513; border: 1px solid #8b451344; }
-.badge-flagship { background: #c2440e22; color: #c2440e; border: 1px solid #c2440e44; }
-.annotation {
-  background: var(--cream);
-  border-left: 3px solid var(--rust);
-  padding: 16px 20px;
-  margin: 40px 0;
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.7;
-}
-.annotation strong { color: var(--ink); font-weight: 500; }
-.price-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1px; background: var(--aged); border: 1px solid var(--aged); margin-top: 48px; }
-.price-cell { background: var(--paper); padding: 16px; font-size: 11px; }
-.price-cell .model { font-weight: 500; color: var(--ink); margin-bottom: 4px; }
-.price-cell .rate { color: var(--rust); font-size: 13px; font-weight: 500; margin-bottom: 2px; }
-.price-cell .per { color: var(--muted); font-size: 9px; letter-spacing: 0.06em; }
-footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--aged); font-size: 10px; color: var(--muted); text-align: center; line-height: 1.8; letter-spacing: 0.04em; }
-@media (max-width: 700px) {
-  .model-row { grid-template-columns: 140px 1fr; grid-template-rows: auto auto; }
-  .bar-label { grid-column: 1 / -1; text-align: left; min-width: unset; }
-}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1a1208;
+    --paper: #f5f0e8;
+    --cream: #ede7d4;
+    --aged: #d4c9a8;
+    --rust: #c2440e;
+    --gold: #b8860b;
+    --forest: #2d5a27;
+    --navy: #1a2744;
+    --sienna: #8b4513;
+    --muted: #6b5d47;
+  }
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    min-height: 100vh;
+    padding: 0;
+    position: relative;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 56px;
+    border-bottom: 3px double var(--aged);
+    padding-bottom: 40px;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  h1 .accent {
+    color: var(--rust);
+    font-style: italic;
+  }
+  .subtitle {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-top: 16px;
+  }
+  /* Book selector */
+  .book-selector {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 48px;
+  }
+  .book-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 8px 16px;
+    border: 1.5px solid var(--aged);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.04em;
+  }
+  .book-btn:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .book-btn.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  /* Selected book info */
+  .book-info {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 20px;
+    border: 1px solid var(--aged);
+    background: var(--cream);
+  }
+  .book-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--ink);
+  }
+  .book-meta {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+    letter-spacing: 0.06em;
+  }
+  /* Main table */
+  .table-section {
+    margin-bottom: 64px;
+  }
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--aged);
+  }
+  .model-row {
+    display: grid;
+    grid-template-columns: 200px 1fr 120px;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--cream);
+    transition: background 0.1s;
+  }
+  .model-row:hover {
+    background: var(--cream);
+    margin: 0 -16px;
+    padding: 14px 16px;
+  }
+  .model-row:first-child {
+    border-top: 1px solid var(--aged);
+  }
+  .model-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .model-family {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .bar-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bar-track {
+    flex: 1;
+    height: 20px;
+    background: var(--cream);
+    border: 1px solid var(--aged);
+    position: relative;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+  .bar-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 3px,
+      rgba(255,255,255,0.15) 3px,
+      rgba(255,255,255,0.15) 6px
+    );
+  }
+  .bar-label {
+    font-size: 10px;
+    color: var(--muted);
+    white-space: nowrap;
+    min-width: 120px;
+    text-align: right;
+  }
+  .bar-label strong {
+    font-size: 15px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  /* Tier colors */
+  .tier-free    { background-color: #2d7a4f; }
+  .tier-budget  { background-color: #3a6ea8; }
+  .tier-mid     { background-color: #b8860b; }
+  .tier-premium { background-color: #8b4513; }
+  .tier-flagship{ background-color: #c2440e; }
+  .tier-badge {
+    display: inline-block;
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    margin-top: 3px;
+    width: fit-content;
+  }
+  .badge-free     { background: #2d7a4f22; color: #2d7a4f; border: 1px solid #2d7a4f44; }
+  .badge-budget   { background: #3a6ea822; color: #3a6ea8; border: 1px solid #3a6ea844; }
+  .badge-mid      { background: #b8860b22; color: #b8860b; border: 1px solid #b8860b44; }
+  .badge-premium  { background: #8b451322; color: #8b4513; border: 1px solid #8b451344; }
+  .badge-flagship { background: #c2440e22; color: #c2440e; border: 1px solid #c2440e44; }
+  /* Annotation strip */
+  .annotation {
+    background: var(--cream);
+    border-left: 3px solid var(--rust);
+    padding: 16px 20px;
+    margin: 40px 0;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .annotation strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  /* Price table at bottom */
+  .price-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--aged);
+    border: 1px solid var(--aged);
+    margin-top: 48px;
+  }
+  .price-cell {
+    background: var(--paper);
+    padding: 16px;
+    font-size: 11px;
+  }
+  .price-cell .model {
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .price-cell .rate {
+    color: var(--rust);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .price-cell .per {
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 0.06em;
+  }
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--aged);
+    font-size: 10px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+  }
+  @media (max-width: 700px) {
+    .model-row {
+      grid-template-columns: 140px 1fr;
+      grid-template-rows: auto auto;
+    }
+    .bar-label {
+      grid-column: 1 / -1;
+      text-align: left;
+      min-width: unset;
+    }
+  }
 </style>
 </head>
 <body>
@@ -176,11 +311,14 @@ footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--aged);
     <h1>How far does<br><span class="accent">$1</span> go?</h1>
     <p class="subtitle">Select a book below — see how many times each model can ingest it for one dollar</p>
   </header>
+  <!-- Book selector -->
   <div class="book-selector" id="bookSelector"></div>
+  <!-- Book info -->
   <div class="book-info">
     <div class="book-title" id="bookTitle">—</div>
     <div class="book-meta" id="bookMeta">—</div>
   </div>
+  <!-- Main chart -->
   <div class="table-section">
     <div class="section-label">Reads per $1.00 — sorted cheapest to priciest</div>
     <div id="modelRows"></div>
@@ -190,6 +328,7 @@ footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--aged);
     <br><br>
     <strong>The open-source caveat:</strong> Llama, Mistral, and DeepSeek prices assume hosted inference (Together.ai / Fireworks). Run them locally on your own hardware and the cost approaches $0.
   </div>
+  <!-- Price reference -->
   <div class="section-label" style="margin-top: 48px;">Input pricing reference — per million tokens</div>
   <div class="price-grid" id="priceGrid"></div>
   <footer>
@@ -199,30 +338,32 @@ footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--aged);
 </div>
 <script>
   const MODELS = [
-    { id: 'gemini-flash-lite',  name: 'Gemini 2.0 Flash-Lite', family: 'Google',       price: 0.075,  tier: 'free',     color: '#2d7a4f' },
-    { id: 'gpt5-nano',          name: 'GPT-5 Nano',            family: 'OpenAI',       price: 0.05,   tier: 'free',     color: '#2a8a5a' },
-    { id: 'llama4-maverick',    name: 'Llama 4 Maverick',      family: 'Meta (hosted)',price: 0.10,   tier: 'budget',   color: '#3a6ea8' },
-    { id: 'deepseek-v3',        name: 'DeepSeek V3.2',         family: 'DeepSeek',     price: 0.14,   tier: 'budget',   color: '#2f5f9e' },
-    { id: 'grok41',             name: 'Grok 4.1',              family: 'xAI',          price: 0.20,   tier: 'budget',   color: '#1a4d8a' },
-    { id: 'gemini-flash',       name: 'Gemini 2.5 Flash',      family: 'Google',       price: 0.30,   tier: 'mid',      color: '#b8860b' },
-    { id: 'claude-haiku',       name: 'Claude Haiku 4.5',      family: 'Anthropic',    price: 1.00,   tier: 'mid',      color: '#9a7200' },
-    { id: 'gpt5',               name: 'GPT-5',                 family: 'OpenAI',       price: 1.25,   tier: 'mid',      color: '#8a6400' },
-    { id: 'gpt52',              name: 'GPT-5.2',               family: 'OpenAI',       price: 1.75,   tier: 'premium',  color: '#8b4513' },
-    { id: 'gemini-pro',         name: 'Gemini 3.1 Pro',        family: 'Google',       price: 2.00,   tier: 'premium',  color: '#7a3810' },
-    { id: 'claude-sonnet',      name: 'Claude Sonnet 4.6',     family: 'Anthropic',    price: 3.00,   tier: 'premium',  color: '#6b2e0c' },
-    { id: 'claude-opus',        name: 'Claude Opus 4.6',       family: 'Anthropic',    price: 5.00,   tier: 'flagship', color: '#c2440e' },
+    { id: 'gemini-flash-lite',  name: 'Gemini 2.0 Flash-Lite', family: 'Google',      price: 0.075,  tier: 'free',     color: '#2d7a4f' },
+    { id: 'gpt5-nano',          name: 'GPT-5 Nano',            family: 'OpenAI',      price: 0.05,   tier: 'free',     color: '#2a8a5a' },
+    { id: 'llama4-maverick',    name: 'Llama 4 Maverick',      family: 'Meta (hosted)',price: 0.10,  tier: 'budget',   color: '#3a6ea8' },
+    { id: 'deepseek-v3',        name: 'DeepSeek V3.2',         family: 'DeepSeek',    price: 0.14,   tier: 'budget',   color: '#2f5f9e' },
+    { id: 'grok41',             name: 'Grok 4.1',              family: 'xAI',         price: 0.20,   tier: 'budget',   color: '#1a4d8a' },
+    { id: 'gemini-flash',       name: 'Gemini 2.5 Flash',      family: 'Google',      price: 0.30,   tier: 'mid',      color: '#b8860b' },
+    { id: 'claude-haiku',       name: 'Claude Haiku 4.5',      family: 'Anthropic',   price: 1.00,   tier: 'mid',      color: '#9a7200' },
+    { id: 'gpt5',               name: 'GPT-5',                 family: 'OpenAI',      price: 1.25,   tier: 'mid',      color: '#8a6400' },
+    { id: 'gpt53codex',         name: 'GPT-5.3 Codex',         family: 'OpenAI',      price: 1.75,   tier: 'premium',  color: '#8b4513' },
+    { id: 'gemini-pro',         name: 'Gemini 3.1 Pro',        family: 'Google',      price: 2.00,   tier: 'premium',  color: '#7a3810' },
+    { id: 'gpt54',              name: 'GPT-5.4',               family: 'OpenAI',      price: 2.50,   tier: 'premium',  color: '#6e2e10' },
+    { id: 'claude-sonnet',      name: 'Claude Sonnet 4.6',     family: 'Anthropic',   price: 3.00,   tier: 'premium',  color: '#6b2e0c' },
+    { id: 'claude-opus',        name: 'Claude Opus 4.6',       family: 'Anthropic',   price: 5.00,   tier: 'flagship', color: '#c2440e' },
   ];
   const BOOKS = [
-    { id: 'gatsby',      title: 'The Great Gatsby',                    author: 'F. Scott Fitzgerald',  tokens: 47000,  note: '~47k tokens · a quick afternoon read' },
-    { id: 'hobbit',      title: 'The Hobbit',                          author: 'J.R.R. Tolkien',       tokens: 95000,  note: '~95k tokens · there and back again' },
-    { id: 'hp1',         title: "Harry Potter & the Sorcerer's Stone", author: 'J.K. Rowling',         tokens: 130000, note: '~130k tokens · the one that started it all' },
-    { id: 'moby',        title: 'Moby-Dick',                           author: 'Herman Melville',      tokens: 215000, note: '~215k tokens · call me obsessed' },
-    { id: 'infinite',    title: 'Infinite Jest',                       author: 'David Foster Wallace', tokens: 475000, note: '~475k tokens · and the footnotes' },
-    { id: 'warandpeace', title: 'War & Peace',                         author: 'Leo Tolstoy',          tokens: 580000, note: '~580k tokens · the benchmark of ambition' },
+    { id: 'gatsby',  title: 'The Great Gatsby',          author: 'F. Scott Fitzgerald', tokens: 47000,  note: '~47k tokens · a quick afternoon read' },
+    { id: 'hobbit',  title: 'The Hobbit',                author: 'J.R.R. Tolkien',      tokens: 95000,  note: '~95k tokens · there and back again' },
+    { id: 'hp1',     title: 'Harry Potter & the Sorcerer\'s Stone', author: 'J.K. Rowling', tokens: 130000, note: '~130k tokens · the one that started it all' },
+    { id: 'moby',    title: 'Moby-Dick',                 author: 'Herman Melville',     tokens: 215000, note: '~215k tokens · call me obsessed' },
+    { id: 'infinite',title: 'Infinite Jest',             author: 'David Foster Wallace', tokens: 475000, note: '~475k tokens · and the footnotes' },
+    { id: 'warandpeace', title: 'War & Peace',           author: 'Leo Tolstoy',         tokens: 580000, note: '~580k tokens · the benchmark of ambition' },
   ];
-  let selectedBook = BOOKS[2];
+  let selectedBook = BOOKS[2]; // Harry Potter default
   function readsForDollar(pricePerMillion, tokens) {
-    return 1 / ((pricePerMillion / 1_000_000) * tokens);
+    const costPerRead = (pricePerMillion / 1_000_000) * tokens;
+    return 1 / costPerRead;
   }
   function formatReads(n) {
     if (n >= 1000) return Math.round(n).toLocaleString() + '×';
@@ -231,8 +372,12 @@ footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--aged);
     return (n * 100).toFixed(0) + '% of one read';
   }
   function renderBookSelector() {
-    document.getElementById('bookSelector').innerHTML = BOOKS.map(b => `
-      <button class="book-btn ${b.id === selectedBook.id ? 'active' : ''}" onclick="selectBook('${b.id}')">${b.title}</button>
+    const el = document.getElementById('bookSelector');
+    el.innerHTML = BOOKS.map(b => `
+      <button class="book-btn ${b.id === selectedBook.id ? 'active' : ''}"
+              onclick="selectBook('${b.id}')">
+        ${b.title}
+      </button>
     `).join('');
   }
   function renderBookInfo() {
@@ -242,38 +387,50 @@ footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--aged);
   function renderRows() {
     const sorted = [...MODELS].sort((a, b) => a.price - b.price);
     const maxReads = readsForDollar(sorted[0].price, selectedBook.tokens);
-    document.getElementById('modelRows').innerHTML = sorted.map(m => {
+    const container = document.getElementById('modelRows');
+    container.innerHTML = sorted.map(m => {
       const reads = readsForDollar(m.price, selectedBook.tokens);
       const pct = Math.min(100, (reads / maxReads) * 100);
+      const badgeClass = `badge-${m.tier}`;
+      const tierLabel = m.tier === 'free' ? 'ultra-budget' : m.tier;
       return `
         <div class="model-row">
           <div class="model-name">
             <span>${m.name}</span>
             <span class="model-family">${m.family}</span>
-            <span class="tier-badge badge-${m.tier}">${m.tier === 'free' ? 'ultra-budget' : m.tier}</span>
+            <span class="tier-badge ${badgeClass}">${tierLabel}</span>
           </div>
           <div class="bar-container">
             <div class="bar-track">
-              <div class="bar-fill" style="width:${pct}%;background-color:${m.color};"></div>
+              <div class="bar-fill" style="width: ${pct}%; background-color: ${m.color};"></div>
             </div>
           </div>
           <div class="bar-label"><strong>${formatReads(reads)}</strong></div>
-        </div>`;
+        </div>
+      `;
     }).join('');
   }
   function renderPriceGrid() {
-    document.getElementById('priceGrid').innerHTML = [...MODELS].sort((a,b) => a.price - b.price).map(m => `
+    const sorted = [...MODELS].sort((a, b) => a.price - b.price);
+    document.getElementById('priceGrid').innerHTML = sorted.map(m => `
       <div class="price-cell">
         <div class="model">${m.name}</div>
         <div class="rate">$${m.price.toFixed(3)}</div>
         <div class="per">per million input tokens</div>
-      </div>`).join('');
+      </div>
+    `).join('');
   }
   function selectBook(id) {
     selectedBook = BOOKS.find(b => b.id === id);
-    renderBookSelector(); renderBookInfo(); renderRows();
+    renderBookSelector();
+    renderBookInfo();
+    renderRows();
   }
-  renderBookSelector(); renderBookInfo(); renderRows(); renderPriceGrid();
+  // Init
+  renderBookSelector();
+  renderBookInfo();
+  renderRows();
+  renderPriceGrid();
 </script>
 </body>
 </html>
